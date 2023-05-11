@@ -1,0 +1,9 @@
+[nodes]
+emqx-0.int.ilya
+
+[loadgens]
+loadgen-0.int.ilya
+loadgen-1.int.ilya
+
+[ext]
+ext-0.int.ilya

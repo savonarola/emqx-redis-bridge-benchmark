@@ -1,0 +1,8 @@
+{
+    "id": "rule_redis",
+    "sql": "SELECT * FROM \"t/#\"",
+    "actions": [
+        "redis_single:redis"
+    ],
+    "description": ""
+}

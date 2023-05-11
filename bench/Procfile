@@ -1,0 +1,2 @@
+l0: ssh loadgen-0.int.ilya bash bench.sh
+l1: ssh loadgen-1.int.ilya bash bench.sh

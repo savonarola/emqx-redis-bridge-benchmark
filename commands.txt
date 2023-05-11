@@ -1,0 +1,1 @@
+./emqttb --loiter 20min @pub --topic 't/%n' --conninterval 5ms --pubinterval 1s --num-clients 100000 --size 200 --qos 1 @g --host lb.int.ilya:1883 --ifaddr $(./hosts.py)

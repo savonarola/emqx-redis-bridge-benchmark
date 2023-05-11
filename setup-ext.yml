@@ -1,0 +1,48 @@
+- user: ubuntu
+  become: yes
+  hosts: ext
+  gather_facts: yes
+  tasks:
+  - name: Download gpg key
+    get_url:
+      url: https://packages.redis.io/gpg
+      dest: /tmp/redis-archive-keyring.gpg
+  - name: Install gpg key
+    shell: "cat /tmp/redis-archive-keyring.gpg | gpg --batch --yes --always-trust --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg"
+  - name: Ensure repo present
+    file:
+      path: /etc/apt/sources.list.d/redis.list
+      state: touch
+  - name: Add Redis apt repository
+    lineinfile:
+      path: /etc/apt/sources.list.d/redis.list
+      line: "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb focal main"
+      state: present
+  - name: Install Redis
+    apt:
+      name:
+      - redis-server
+      - redis-tools
+      update_cache: yes
+      state: present
+  - name: Bind to 0.0.0.0
+    lineinfile:
+      path: /etc/redis/redis.conf
+      regexp: '^bind'
+      line: 'bind 0.0.0.0'
+  - name: Set protected mode to no
+    lineinfile:
+      path: /etc/redis/redis.conf
+      regexp: '^protected-mode'
+      line: 'protected-mode no'
+  - name: Disable RDB persistence
+    lineinfile:
+      path: /etc/redis/redis.conf
+      regexp: '^save'
+      line: 'save ""'
+  - name: Restart Redis
+    service:
+      name: redis-server
+      state: restarted
+
+

@@ -1,0 +1,49 @@
+- user: ubuntu
+  become: no
+  hosts: loadgens
+  gather_facts: no
+  tasks:
+  - file:
+      path: /home/ubuntu/emqtt-bench
+      state: absent
+  - file:
+      path: /home/ubuntu/bench
+      state: absent
+  - file:
+      path: /home/ubuntu/bench
+      state: directory
+  - git:
+      repo: https://github.com/emqx/emqtt-bench
+      dest: /home/ubuntu/bench/emqtt-bench
+      version: master
+      force: yes
+  - shell: make
+    args:
+      chdir: /home/ubuntu/bench/emqtt-bench
+    environment:
+      BUILD_WITHOUT_QUIC: 1
+  - file:
+      path: /home/ubuntu/bench/emqttb
+      state: absent
+  - file:
+      path: /home/ubuntu/bench/emqttb
+      state: directory
+  - unarchive:
+      src: https://github.com/emqx/emqttb/releases/download/v0.1.6/emqttb-0.1.6-ubuntu20.04-amd64-quic.tar.gz
+      dest: /home/ubuntu/bench/emqttb
+      remote_src: yes
+  - file:
+      path: /home/ubuntu/emqttb
+      state: absent
+  - file:
+      src: /home/ubuntu/bench/emqttb/bin/emqttb
+      dest: /home/ubuntu/emqttb
+      state: link
+  - template:
+      src: hosts.py
+      dest: /home/ubuntu/hosts.py
+      mode: 0755
+  - template:
+      src: bench.sh
+      dest: /home/ubuntu/bench.sh
+      mode: 0755

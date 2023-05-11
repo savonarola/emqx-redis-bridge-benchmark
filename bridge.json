@@ -1,0 +1,31 @@
+{
+  "enable": true,
+  "command_template": [
+    "HMSET",
+    "msg:${id}",
+    "id",
+    "${id}",
+    "payload",
+    "${payload}"
+  ],
+  "resource_opts": {
+    "worker_pool_size": 8,
+    "health_check_interval": "15s",
+    "start_timeout": "5s",
+    "auto_restart_interval": "60s",
+    "query_mode": "async",
+    "request_timeout": "15s",
+    "inflight_window": 100,
+    "batch_size": 500,
+    "max_buffer_bytes": "256MB"
+  },
+  "server": "ext-0.int.ilya",
+  "redis_type": "single",
+  "pool_size": 32,
+  "ssl": {
+    "enable": false,
+    "verify": "verify_peer"
+  },
+  "type": "redis_single",
+  "name": "redis"
+}
